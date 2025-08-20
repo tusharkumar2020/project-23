@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HIIT Interval Timer</title>
+</head>
+<body>
+    <h1>HIIT Interval Timer</h1>
+
+    <label for="work">Work interval (seconds):</label>
+    <input type="number" id="work" value="30" min="1" max="600"><br><br>
+
+    <label for="rest">Rest interval (seconds):</label>
+    <input type="number" id="rest" value="15" min="1" max="600"><br><br>
+
+    <label for="rounds">Rounds:</label>
+    <input type="number" id="rounds" value="5" min="1" max="50"><br><br>
+
+    <button onclick="startTimer()">Start Timer</button>
+
+    <h2 id="status"></h2>
+    <h2 id="countdown"></h2>
+
+    <script>
+        let timer;
+        let rounds, currentRound, workTime, restTime;
+        let isWork;
+
+        function startTimer() {
+            rounds = parseInt(document.getElementById('rounds').value);
+            workTime = parseInt(document.getElementById('work').value);
+            restTime = parseInt(document.getElementById('rest').value);
+            currentRound = 1;
+            isWork = true;
+
+            document.getElementById('status').textContent = `Round ${currentRound} - Work`;
+            countdown(workTime);
+        }
+
+        function countdown(seconds) {
+            clearInterval(timer);
+            let timeLeft = seconds;
+            document.getElementById('countdown').textContent = timeLeft;
+
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('countdown').textContent = timeLeft;
+
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+
+                    if (isWork) {
+                        isWork = false;
+                        document.getElementById('status').textContent = `Round ${currentRound} - Rest`;
+                        countdown(restTime);
+                    } else {
+                        currentRound++;
+                        if (currentRound > rounds) {
+                            document.getElementById('status').textContent = 'Workout Complete!';
+                            document.getElementById('countdown').textContent = '';
+                        } else {
+                            isWork = true;
+                            document.getElementById('status').textContent = `Round ${currentRound} - Work`;
+                            countdown(workTime);
+                        }
+                    }
+                }
+            }, 1000);
+        }
+    </script>
+</body>
+</html>
